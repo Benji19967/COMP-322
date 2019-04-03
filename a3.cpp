@@ -4,11 +4,11 @@
 using namespace std;
 
 /* Question 1 - Smart Pointers in the standard library
-    - std::unique_ptr:
+    - std::unique_ptr:  Can point to one Object. As soon as the pointer goes out of scope the Object is was pointing to is deleted.
 
-    - std::shared_ptr:
+    - std::shared_ptr:  Pointer can be copied. There is a count for how many pointers point to an Object. If the count goes to 0, the Object is deleted.
 
-    - std::weak_ptr:
+    - std::weak_ptr:    Pointer to hold a non-owning reference to an object managed by shared_ptr. Can access object temporarily if it exists. 
 */
 
 
@@ -22,7 +22,7 @@ class NegativeException: public exception {
 
 class SizeException: public exception {
     virtual const char* what() const throw() {
-        return "Warning: different sizes";
+        return "Warning: Arrays have different sizes";
     }
 };
 class MissMatchException: public exception {
@@ -36,11 +36,6 @@ SizeException diffSizes;
 MissMatchException missMatch;
 
 template <class T> class SmartPointer {
-    private:
-        T *p;
-        T *arr;
-        int size;
-    
     public:
         SmartPointer();                     // Constructor int
         SmartPointer(T x);                  // Constructor int
@@ -110,6 +105,11 @@ template <class T> class SmartPointer {
                 throw missMatch;
             }
         }
+
+    private:
+        T *p;
+        T *arr;
+        int size;
 };
 
 
@@ -225,40 +225,72 @@ int main() {
     SmartPointer<float> SmartFloatPointer5 = SmartFloatPointer1 * SmartFloatPointer2;
     cout << "SmartFloatPointer1 * SmartFloatPointer2 = " << SmartFloatPointer5.getValue() << endl;
 
-    // For handling arrays
-    cout << "Testing arrays" << endl;
+    cout << endl;
 
+    // For handling arrays
+    cout << "Testing arrays -- Assume arrays can have negative values" << endl << endl;
+    
     // New pointer to array
+    cout << "New Array P1 of size 10. Initialized with 0's:" << endl;
     SmartPointer<int> ArrP1(true, 10);
+    cout << "ArrP1: "; ArrP1.printAllValues();
+    cout << "Set value at index 5 to 17:" << endl;
     ArrP1.setValue(5, 17);
     cout << "ArrP1: "; ArrP1.printAllValues();
+    cout << endl;
 
     // New pointer to array
+    cout << "New Array P1 of size 10. Set index 5 to 10, index 6 to 11. Get index 6:" << endl;
     SmartPointer<int> ArrP2(true, 10);
     ArrP2.setValue(5, 10);
     ArrP2.setValue(6, 11);
     cout << "ArrP2: "; ArrP2.printAllValues();
+    cout << "ArrP2 index 6: " << ArrP2.getValue(6) << endl;
+    cout << endl;
 
-
+    // New pointers to arrays
+    cout << "Arr 3 and Arr 4 are initialized to have values of other arrays: " << endl;
     int arr[5] = {1, 2, 3, 4, 5};
     SmartPointer<int> ArrP3(5, arr);
     cout << "ArrP3: "; ArrP3.printAllValues();
     int arr2[5] = {5, 5, 5, 5, 5};
-    SmartPointer<int> ArrP5(5, arr2);
-    cout << "ArrP5: "; ArrP5.printAllValues();
+    SmartPointer<int> ArrP4(5, arr2);
+    cout << "ArrP4: "; ArrP4.printAllValues();
+    cout << endl;
 
+    // Operator Overloading
 
-    // Add two arrays
-    cout << "ArrP1 + ArrP2:" << endl;
-    SmartPointer<int> ArrP4 = ArrP1 + ArrP2;
-    ArrP4.printAllValues();
+    cout << "Operator Overloading: " << endl;
+    // Addition
+    cout << "Addition: ArrP3 + ArrP4 = ";
+    SmartPointer<int> ArrP5 = ArrP3 + ArrP4;
+    ArrP5.printAllValues();
 
-    // Mult
-    cout << "ArrP3 * ArrP5:" << endl;
-    SmartPointer<int> ArrP6 = ArrP3 * ArrP5;
+    // Subtraction
+    cout << "Subtraction: ArrP3 - ArrP4 = ";
+    SmartPointer<int> ArrP6 = ArrP3 - ArrP4;
     ArrP6.printAllValues();
 
-    // add the needed code that shows how you use your class to create an array of multiple elements of a certain type.
-    // provide all the necessary test code that shows the different use cases of your code
-    
+    // Multiplication
+    cout << "Multiplication: ArrP3 * ArrP4 = ";
+    SmartPointer<int> ArrP7 = ArrP3 * ArrP4;
+    ArrP7.printAllValues();
+    cout << endl;
+
+    cout << "Try to Add/Sub/Mult arrays with different sizes: " << endl;
+    try {
+        SmartPointer<int> ArrP8 = ArrP1 + ArrP4;
+        ArrP5.printAllValues();
+    } catch (exception& e) {            
+        cout << e.what() << endl;
+    }
+    cout << endl;
+
+    cout << "Try to Add/Sub/Mult array with single variable: " << endl;
+    try {
+        SmartPointer<int> ArrP8 = ArrP1 + SmartIntPointer1;
+        ArrP5.printAllValues();
+    } catch (exception& e) {            
+        cout << e.what() << endl;
+    }
 }
