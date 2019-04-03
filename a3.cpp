@@ -4,11 +4,14 @@
 using namespace std;
 
 /* Question 1 - Smart Pointers in the standard library
-    - std::unique_ptr:  Can point to one Object. As soon as the pointer goes out of scope the Object is was pointing to is deleted.
+    - std::unique_ptr:  Can point to one Object. As soon as the pointer goes out of scope,
+                        the Object is was pointing to is deleted.
 
-    - std::shared_ptr:  Pointer can be copied. There is a count for how many pointers point to an Object. If the count goes to 0, the Object is deleted.
+    - std::shared_ptr:  Pointer can be copied. There is a count for how many pointers point to an Object. 
+                        If the count goes to 0, the Object is deleted.
 
-    - std::weak_ptr:    Pointer to hold a non-owning reference to an object managed by shared_ptr. Can access object temporarily if it exists. 
+    - std::weak_ptr:    Pointer to hold a non-owning reference to an object managed by shared_ptr. 
+                        Can access object temporarily if it exists. 
 */
 
 
